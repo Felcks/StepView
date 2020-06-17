@@ -679,7 +679,7 @@ public class StepView extends View {
             textPaint.setTextSize(textSize);
             textPaint.setStyle(TextPaint.Style.FILL);
             textPaint.setColor(selectedTextColor);
-            drawText(canvas, text, textY, step);
+            drawText(canvas, text, textY, step, true);
         } else if (isDone) {
             paint.setColor(doneCircleColor);
             drawCircle3LayersDone(canvas, circleCenterX, circleCenterY, doneCircleRadius, paint, doneCircleColor);
@@ -695,7 +695,7 @@ public class StepView extends View {
             textPaint.setTextSize(textSize);
 
             textPaint.setColor(doneTextColor);
-            drawText(canvas, text, textY, step);
+            drawText(canvas, text, textY, step, false);
         } else {
             if (state == ANIMATE_STEP_TRANSITION && step == nextAnimatedStep && nextAnimatedStep > currentStep) {
                 if (animationType == ANIMATION_CIRCLE || animationType == ANIMATION_ALL) {
@@ -739,7 +739,7 @@ public class StepView extends View {
                 textPaint.setColor(nextTextColor);
                 int alpha = (int) Math.max(Color.alpha(nextTextColor), animatedFraction * 255);
                 textPaint.setAlpha(alpha);
-                drawText(canvas, text, textY, step);
+                drawText(canvas, text, textY, step, false);
             } else {
                 if (nextStepCircleEnabled && nextStepCircleColor != 0) {
                     paint.setColor(nextStepCircleColor);
@@ -753,7 +753,7 @@ public class StepView extends View {
 
                 textPaint.setTextSize(textSize);
                 textPaint.setColor(nextTextColor);
-                drawText(canvas, text, textY, step);
+                drawText(canvas, text, textY, step, false);
             }
         }
     }
@@ -770,13 +770,11 @@ public class StepView extends View {
     }
 
     private void drawCircle3LayersDone(Canvas canvas, int circleX, int circleY, int radius, Paint paint, int defaultColor) {
-        paint.setAlpha(180);
+        paint.setAlpha(255);
         canvas.drawCircle(circleX, circleY, radius, paint);
         paint.setColor(backgroundColor);
-        paint.setAlpha(255);
         canvas.drawCircle(circleX, circleY, radius / 1.15f, paint);
         paint.setColor(defaultColor);
-        paint.setAlpha(180);
         canvas.drawCircle(circleX, circleY, radius / 2f, paint);
     }
 
@@ -795,10 +793,17 @@ public class StepView extends View {
         canvas.drawText(number, circleCenterX, y, paint);
     }
 
-    private void drawText(Canvas canvas, String text, int y, int step) {
+    private void drawText(Canvas canvas, String text, int y, int step, boolean boldTypeFace) {
         if (text.isEmpty()) {
             return;
         }
+
+        Typeface typeface = Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL);
+        if(boldTypeFace){
+            typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+        }
+        paint.setTypeface(typeface);
+
         StaticLayout layout = textLayouts[step];
         canvas.save();
         canvas.translate(circlesX[step], y);
