@@ -799,10 +799,12 @@ public class StepView extends View {
         }
 
         Typeface typeface = Typeface.create(Typeface.SANS_SERIF,Typeface.NORMAL);
+        textPaint.setAlpha(100);
         if(boldTypeFace){
             typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+            textPaint.setAlpha(255);
         }
-        paint.setTypeface(typeface);
+        textPaint.setTypeface(typeface);
 
         StaticLayout layout = textLayouts[step];
         canvas.save();
