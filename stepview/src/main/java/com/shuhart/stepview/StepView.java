@@ -679,7 +679,7 @@ public class StepView extends View {
             textPaint.setTextSize(textSize);
             textPaint.setStyle(TextPaint.Style.FILL);
             textPaint.setColor(selectedTextColor);
-            drawText(canvas, text, textY, step, true);
+            drawText(canvas, text, textY, step, true, true);
         } else if (isDone) {
             paint.setColor(doneCircleColor);
             drawCircle3LayersDone(canvas, circleCenterX, circleCenterY, doneCircleRadius, paint, doneCircleColor);
@@ -695,7 +695,7 @@ public class StepView extends View {
             textPaint.setTextSize(textSize);
 
             textPaint.setColor(doneTextColor);
-            drawText(canvas, text, textY, step, false);
+            drawText(canvas, text, textY, step, false, true);
         } else {
             if (state == ANIMATE_STEP_TRANSITION && step == nextAnimatedStep && nextAnimatedStep > currentStep) {
                 if (animationType == ANIMATION_CIRCLE || animationType == ANIMATION_ALL) {
@@ -739,7 +739,7 @@ public class StepView extends View {
                 textPaint.setColor(nextTextColor);
                 int alpha = (int) Math.max(Color.alpha(nextTextColor), animatedFraction * 255);
                 textPaint.setAlpha(alpha);
-                drawText(canvas, text, textY, step, false);
+                drawText(canvas, text, textY, step, false, false);
             } else {
                 if (nextStepCircleEnabled && nextStepCircleColor != 0) {
                     paint.setColor(nextStepCircleColor);
@@ -753,7 +753,7 @@ public class StepView extends View {
 
                 textPaint.setTextSize(textSize);
                 textPaint.setColor(nextTextColor);
-                drawText(canvas, text, textY, step, false);
+                drawText(canvas, text, textY, step, false, false);
             }
         }
     }
@@ -793,7 +793,7 @@ public class StepView extends View {
         canvas.drawText(number, circleCenterX, y, paint);
     }
 
-    private void drawText(Canvas canvas, String text, int y, int step, boolean boldTypeFace) {
+    private void drawText(Canvas canvas, String text, int y, int step, boolean boldTypeFace, boolean boldAlpha) {
         if (text.isEmpty()) {
             return;
         }
@@ -802,8 +802,11 @@ public class StepView extends View {
         textPaint.setAlpha(100);
         if(boldTypeFace){
             typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+        }
+        if(boldAlpha){
             textPaint.setAlpha(255);
         }
+
         textPaint.setTypeface(typeface);
 
         StaticLayout layout = textLayouts[step];
