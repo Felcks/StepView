@@ -113,6 +113,8 @@ public class StepView extends View {
     private boolean nextStepCircleEnabled;
     @ColorInt
     private int nextStepCircleColor;
+    @ColorInt
+    private int backgroundColor;
 
     private Paint paint;
     private TextPaint textPaint;
@@ -171,6 +173,7 @@ public class StepView extends View {
         stepsNumber = ta.getInteger(R.styleable.StepView_sv_stepsNumber, 0);
         nextStepCircleEnabled = ta.getBoolean(R.styleable.StepView_sv_nextStepCircleEnabled, false);
         nextStepCircleColor = ta.getColor(R.styleable.StepView_sv_nextStepCircleColor, 0);
+        backgroundColor = ta.getColor(R.styleable.StepView_sv_background, 0);
         CharSequence[] descriptions = ta.getTextArray(R.styleable.StepView_sv_steps);
         if (descriptions != null) {
             for (CharSequence description : descriptions) {
@@ -660,6 +663,10 @@ public class StepView extends View {
             } else {
                 radius = selectedCircleRadius;
             }
+            canvas.drawCircle(circleCenterX, circleCenterY, radius * 2, paint);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, radius * 1.6f, paint);
+            paint.setColor(selectedCircleColor);
             canvas.drawCircle(circleCenterX, circleCenterY, radius, paint);
 
             paint.setColor(selectedStepNumberColor);
@@ -670,6 +677,10 @@ public class StepView extends View {
             textPaint.setColor(selectedTextColor);
             drawText(canvas, text, textY, step);
         } else if (isDone) {
+            paint.setColor(doneCircleColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius * 2, paint);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius * 1.6f, paint);
             paint.setColor(doneCircleColor);
             canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, paint);
 
