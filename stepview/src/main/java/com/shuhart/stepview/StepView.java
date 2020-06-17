@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.Dimension;
 import androidx.annotation.IntDef;
@@ -19,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.view.ViewCompat;
+
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -646,6 +648,7 @@ public class StepView extends View {
         if (isSelected && !isDone) {
             paint.setColor(selectedCircleColor);
             int radius;
+            int color = selectedCircleColor;
             if (state == ANIMATE_STEP_TRANSITION && (animationType == ANIMATION_CIRCLE || animationType == ANIMATION_ALL)
                     && nextAnimatedStep < currentStep) {
                 if (!nextStepCircleEnabled || nextStepCircleColor == 0) {
@@ -659,15 +662,15 @@ public class StepView extends View {
                             nextStepCircleColor,
                             animatedFraction)
                     );
+                    color = ColorUtils.blendARGB(
+                            selectedCircleColor,
+                            nextStepCircleColor,
+                            animatedFraction);
                 }
             } else {
                 radius = selectedCircleRadius;
             }
-            canvas.drawCircle(circleCenterX, circleCenterY, radius, paint);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, radius / 1.3f, paint);
-            paint.setColor(selectedCircleColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, radius / 2f, paint);
+            drawCircle3Layers(canvas, circleCenterX, circleCenterY, radius, paint, color);
 
             paint.setColor(selectedStepNumberColor);
             paint.setTextSize(stepNumberTextSize);
@@ -678,12 +681,7 @@ public class StepView extends View {
             drawText(canvas, text, textY, step);
         } else if (isDone) {
             paint.setColor(doneCircleColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, paint);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius / 1.3f, paint);
-            paint.setColor(doneCircleColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius / 2f, paint);
-
+            drawCircle3Layers(canvas, circleCenterX, circleCenterY, doneCircleRadius, paint, doneCircleColor);
             drawCheckMark(canvas, circleCenterX, circleCenterY);
 
             if (state == ANIMATE_STEP_TRANSITION && step == nextAnimatedStep && nextAnimatedStep < currentStep) {
@@ -705,11 +703,16 @@ public class StepView extends View {
                                 selectedCircleColor,
                                 animatedFraction)
                         );
-                        canvas.drawCircle(circleCenterX, circleCenterY, selectedCircleRadius, paint);
+                        int color = (ColorUtils.blendARGB(
+                                nextStepCircleColor,
+                                selectedCircleColor,
+                                animatedFraction));
+
+                        drawCircle3Layers(canvas, circleCenterX, circleCenterY, selectedCircleRadius, paint, color);
                     } else {
                         int animatedRadius = (int) (selectedCircleRadius * animatedFraction);
                         paint.setColor(selectedCircleColor);
-                        canvas.drawCircle(circleCenterX, circleCenterY, animatedRadius, paint);
+                        drawCircle3Layers(canvas, circleCenterX, circleCenterY, animatedRadius, paint, selectedCircleColor);
                     }
                 }
                 if (animationType != ANIMATION_NONE) {
@@ -738,7 +741,7 @@ public class StepView extends View {
             } else {
                 if (nextStepCircleEnabled && nextStepCircleColor != 0) {
                     paint.setColor(nextStepCircleColor);
-                    canvas.drawCircle(circleCenterX, circleCenterY, selectedCircleRadius, paint);
+                    drawCircle3Layers(canvas, circleCenterX, circleCenterY, selectedCircleRadius, paint, nextStepCircleColor);
                 }
 
                 paint.setColor(nextTextColor);
@@ -751,6 +754,14 @@ public class StepView extends View {
                 drawText(canvas, text, textY, step);
             }
         }
+    }
+
+    private void drawCircle3Layers(Canvas canvas, int circleX, int circleY, int radius, Paint paint, int defaultColor) {
+        canvas.drawCircle(circleX, circleY, radius, paint);
+        paint.setColor(backgroundColor);
+        canvas.drawCircle(circleX, circleY, radius / 1.3f, paint);
+        paint.setColor(defaultColor);
+        canvas.drawCircle(circleX, circleY, radius / 2f, paint);
     }
 
     private void drawNumber(Canvas canvas, String number, int circleCenterX, Paint paint) {
