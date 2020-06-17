@@ -663,11 +663,11 @@ public class StepView extends View {
             } else {
                 radius = selectedCircleRadius;
             }
-            canvas.drawCircle(circleCenterX, circleCenterY, radius * 2, paint);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, radius * 1.6f, paint);
-            paint.setColor(selectedCircleColor);
             canvas.drawCircle(circleCenterX, circleCenterY, radius, paint);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, radius / 1.3f, paint);
+            paint.setColor(selectedCircleColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, radius / 2f, paint);
 
             paint.setColor(selectedStepNumberColor);
             paint.setTextSize(stepNumberTextSize);
@@ -678,11 +678,11 @@ public class StepView extends View {
             drawText(canvas, text, textY, step);
         } else if (isDone) {
             paint.setColor(doneCircleColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius * 2, paint);
-            paint.setColor(backgroundColor);
-            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius * 1.6f, paint);
-            paint.setColor(doneCircleColor);
             canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius, paint);
+            paint.setColor(backgroundColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius / 1.3f, paint);
+            paint.setColor(doneCircleColor);
+            canvas.drawCircle(circleCenterX, circleCenterY, doneCircleRadius / 2f, paint);
 
             drawCheckMark(canvas, circleCenterX, circleCenterY);
 
