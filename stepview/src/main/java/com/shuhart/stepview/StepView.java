@@ -844,8 +844,10 @@ public class StepView extends View {
             canvas.drawLine(startX, centerY, endX, centerY, paint);
         } else {
             paint.setColor(nextStepLineColor);
+            paint.setAlpha(100);
             paint.setStrokeWidth(stepLineWidth);
             canvas.drawLine(startX, centerY, endX, centerY, paint);
+            paint.setAlpha(255);
         }
     }
 
